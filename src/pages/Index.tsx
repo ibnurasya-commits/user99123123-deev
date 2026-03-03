@@ -256,6 +256,8 @@ const Index = () => {
                   orderType={orderType}
                   wizardStep={currentWizardStep}
                   totalSteps={totalSteps}
+                  eventConfig={eventConfig}
+                  customFields={customFields}
                 />
               </div>
             </div>
