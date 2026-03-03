@@ -4,7 +4,7 @@ import OrderTypeSelection, { OrderType } from "@/components/OrderTypeSelection";
 import WizardStepIndicator from "@/components/WizardStepIndicator";
 import EventInfoForm from "@/components/EventInfoForm";
 import SubscriptionConfigForm from "@/components/SubscriptionConfigForm";
-import EventConfigForm, { EventProduct } from "@/components/EventConfigForm";
+import EventConfigForm, { EventConfigState } from "@/components/EventConfigForm";
 import CustomFieldsStep from "@/components/CustomFieldsStep";
 import SummaryPanel from "@/components/SummaryPanel";
 import SubscriptionProductModal from "@/components/SubscriptionProductModal";
