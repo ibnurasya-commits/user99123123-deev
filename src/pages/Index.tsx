@@ -168,10 +168,9 @@ const Index = () => {
                 <div className="rounded-lg border border-border bg-card p-6">
                   <h2 className="mb-5 text-base font-semibold text-foreground">Event Configuration</h2>
                   <EventConfigForm
-                    products={eventProducts}
-                    onAddProduct={(p) => setEventProducts((prev) => [...prev, p])}
-                    onEditProduct={(p) => setEventProducts((prev) => prev.map((ep) => ep.id === p.id ? p : ep))}
-                    onDeleteProduct={(id) => setEventProducts((prev) => prev.filter((p) => p.id !== id))}
+                    config={eventConfig}
+                    onChange={setEventConfig}
+                    onSetOption={() => {/* TODO: open set option modal */}}
                   />
                   <div className="mt-6 flex items-center justify-between">
                     <Button
