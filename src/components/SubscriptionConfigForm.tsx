@@ -1,6 +1,6 @@
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Plus, Edit, Trash2, AlertCircle } from "lucide-react";
+import { Plus, Edit, Trash2 } from "lucide-react";
 import { SubscriptionProduct } from "@/types/subscription";
 
 interface SubscriptionConfigFormProps {
@@ -84,13 +84,6 @@ const SubscriptionConfigForm = ({
         )}
       </div>
 
-      {/* Info Banner */}
-      <div className="flex items-start gap-3 rounded-md border border-warning/30 bg-warning/5 px-4 py-3">
-        <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-warning" />
-        <p className="text-xs text-warning">
-          Customers will be asked to select a subscription plan when making a payment, and the merchant must confirm the customer's order.
-        </p>
-      </div>
 
     </div>
   );
