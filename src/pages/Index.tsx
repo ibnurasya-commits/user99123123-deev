@@ -4,14 +4,15 @@ import OrderTypeSelection, { OrderType } from "@/components/OrderTypeSelection";
 import WizardStepIndicator from "@/components/WizardStepIndicator";
 import EventInfoForm from "@/components/EventInfoForm";
 import SubscriptionConfigForm from "@/components/SubscriptionConfigForm";
+import EventConfigForm, { EventProduct } from "@/components/EventConfigForm";
+import CustomFieldsStep from "@/components/CustomFieldsStep";
 import SummaryPanel from "@/components/SummaryPanel";
 import SubscriptionProductModal from "@/components/SubscriptionProductModal";
 import { SubscriptionProduct } from "@/types/subscription";
 import { toast } from "@/hooks/use-toast";
 import { ArrowLeft } from "lucide-react";
 
-type WizardPhase = "type-select" | "step1" | "step2";
-
+type WizardPhase = "type-select" | "step1" | "step2" | "step3";
 const Index = () => {
   const [phase, setPhase] = useState<WizardPhase>("type-select");
   const [orderType, setOrderType] = useState<OrderType | null>(null);
