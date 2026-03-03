@@ -50,7 +50,8 @@ const Index = () => {
   };
 
   const isSubscription = orderType === "whatsapp-subscription";
-  const totalSteps = isSubscription ? 2 : 1;
+  const isAcceptOrder = orderType === "accept-order";
+  const totalSteps = isSubscription ? 2 : 3;
 
   const step1Valid = eventName.trim().length > 0;
   const canCreate = isSubscription ? step1Valid && products.length > 0 : step1Valid;
