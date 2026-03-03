@@ -20,6 +20,7 @@ interface EventInfoFormProps {
 
 const EventInfoForm = ({
   eventName, setEventName,
+  language, setLanguage,
   eventDescription, setEventDescription,
   bannerFile, setBannerFile,
   termsUrl, setTermsUrl,
