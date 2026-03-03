@@ -20,17 +20,13 @@ const Index = () => {
   const [bannerFile, setBannerFile] = useState<File | null>(null);
   const [termsUrl, setTermsUrl] = useState("");
 
+  // Step 1 extra
+  const [language, setLanguage] = useState("en");
+
   // Step 2
   const [products, setProducts] = useState<SubscriptionProduct[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<SubscriptionProduct | null>(null);
-  const [advancedSettings, setAdvancedSettings] = useState({
-    multipleEntries: false,
-    autoConfirmation: false,
-    autoProcess: false,
-    quantityConfig: false,
-    additionalFees: false,
-  });
 
   const handleSaveProduct = (product: SubscriptionProduct) => {
     setProducts((prev) => {
