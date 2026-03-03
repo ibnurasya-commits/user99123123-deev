@@ -203,6 +203,27 @@ const Index = () => {
                   </div>
                 </div>
               )}
+
+              {/* Accept Order - Step 3: Custom Fields */}
+              {phase === "step3" && isAcceptOrder && (
+                <div className="rounded-lg border border-border bg-card p-6">
+                  <h2 className="mb-5 text-base font-semibold text-foreground">Custom Field Data</h2>
+                  <CustomFieldsStep />
+                  <div className="mt-6 flex items-center justify-between">
+                    <Button
+                      variant="ghost"
+                      onClick={() => setPhase("step2")}
+                      className="text-muted-foreground"
+                    >
+                      <ArrowLeft className="mr-2 h-4 w-4" />
+                      Back
+                    </Button>
+                    <Button onClick={handleCreate} disabled={!canCreate}>
+                      Create Event
+                    </Button>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Right: Summary */}
