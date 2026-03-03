@@ -144,7 +144,33 @@ const Index = () => {
                       Back
                     </Button>
                     <Button onClick={handleContinueFromStep1} disabled={!step1Valid}>
-                      {isSubscription ? "Continue" : "Create Order"}
+                      Continue
+                    </Button>
+                  </div>
+                </div>
+              )}
+
+              {/* Accept Order - Step 2: Event Configuration */}
+              {phase === "step2" && isAcceptOrder && (
+                <div className="rounded-lg border border-border bg-card p-6">
+                  <h2 className="mb-5 text-base font-semibold text-foreground">Event Configuration</h2>
+                  <EventConfigForm
+                    products={eventProducts}
+                    onAddProduct={(p) => setEventProducts((prev) => [...prev, p])}
+                    onEditProduct={(p) => setEventProducts((prev) => prev.map((ep) => ep.id === p.id ? p : ep))}
+                    onDeleteProduct={(id) => setEventProducts((prev) => prev.filter((p) => p.id !== id))}
+                  />
+                  <div className="mt-6 flex items-center justify-between">
+                    <Button
+                      variant="ghost"
+                      onClick={() => setPhase("step1")}
+                      className="text-muted-foreground"
+                    >
+                      <ArrowLeft className="mr-2 h-4 w-4" />
+                      Back
+                    </Button>
+                    <Button onClick={handleContinueFromStep2}>
+                      Continue
                     </Button>
                   </div>
                 </div>
