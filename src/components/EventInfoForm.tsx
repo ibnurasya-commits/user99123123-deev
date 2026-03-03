@@ -57,6 +57,21 @@ const EventInfoForm = ({
 
       <div>
         <Label className="text-sm font-medium text-foreground">
+          Language <span className="text-destructive">*</span>
+        </Label>
+        <Select value={language} onValueChange={setLanguage}>
+          <SelectTrigger className="mt-1.5 w-full">
+            <SelectValue placeholder="Select language" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="en">English</SelectItem>
+            <SelectItem value="id">Bahasa Indonesia</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div>
+        <Label className="text-sm font-medium text-foreground">
           Event Description <span className="text-destructive">*</span>
         </Label>
         {bannerPreview && (

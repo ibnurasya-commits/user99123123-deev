@@ -108,8 +108,6 @@ const Index = () => {
                 }}
                 onDeleteProduct={handleDeleteProduct}
                 onEditProduct={handleEditProduct}
-                advancedSettings={advancedSettings}
-                onAdvancedChange={handleAdvancedChange}
               />
             </StepSection>
 
