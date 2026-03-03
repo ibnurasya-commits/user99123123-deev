@@ -66,10 +66,10 @@ const EventConfigForm = ({ config, onChange, onSetOption }: EventConfigFormProps
         </div>
 
         {isCustomer && (
-          <div className="rounded-md border border-orange-300 bg-orange-50 px-4 py-3">
+          <div className="rounded-md border border-destructive/30 bg-destructive/5 px-4 py-3">
             <div className="flex items-start gap-2">
-              <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-orange-500" />
-              <p className="text-sm text-orange-700">
+              <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-destructive" />
+              <p className="text-sm text-destructive">
                 Customers will be asked to enter the amount when making a payment, and the merchant must confirm the customer's order.
               </p>
             </div>
