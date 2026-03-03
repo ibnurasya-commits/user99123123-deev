@@ -4,7 +4,7 @@ import OrderTypeSelection, { OrderType } from "@/components/OrderTypeSelection";
 import WizardStepIndicator from "@/components/WizardStepIndicator";
 import EventInfoForm from "@/components/EventInfoForm";
 import SubscriptionConfigForm from "@/components/SubscriptionConfigForm";
-import EventConfigForm, { EventProduct } from "@/components/EventConfigForm";
+import EventConfigForm, { EventConfigState } from "@/components/EventConfigForm";
 import CustomFieldsStep from "@/components/CustomFieldsStep";
 import SummaryPanel from "@/components/SummaryPanel";
 import SubscriptionProductModal from "@/components/SubscriptionProductModal";
@@ -30,7 +30,20 @@ const Index = () => {
   const [editingProduct, setEditingProduct] = useState<SubscriptionProduct | null>(null);
 
   // Step 2 - Accept Order
-  const [eventProducts, setEventProducts] = useState<EventProduct[]>([]);
+  const [eventConfig, setEventConfig] = useState<EventConfigState>({
+    priceOption: "customer",
+    priceAmount: "",
+    priceReference: true,
+    language: "en",
+    setActivePeriod: false,
+    startDate: "",
+    endDate: "",
+    allowMultipleEntries: true,
+    autoConfirmation: true,
+    autoProcessOrder: true,
+    activateQuantity: true,
+    additionalFees: true,
+  });
 
   const handleSaveProduct = (product: SubscriptionProduct) => {
     setProducts((prev) => {
@@ -155,10 +168,9 @@ const Index = () => {
                 <div className="rounded-lg border border-border bg-card p-6">
                   <h2 className="mb-5 text-base font-semibold text-foreground">Event Configuration</h2>
                   <EventConfigForm
-                    products={eventProducts}
-                    onAddProduct={(p) => setEventProducts((prev) => [...prev, p])}
-                    onEditProduct={(p) => setEventProducts((prev) => prev.map((ep) => ep.id === p.id ? p : ep))}
-                    onDeleteProduct={(id) => setEventProducts((prev) => prev.filter((p) => p.id !== id))}
+                    config={eventConfig}
+                    onChange={setEventConfig}
+                    onSetOption={() => {/* TODO: open set option modal */}}
                   />
                   <div className="mt-6 flex items-center justify-between">
                     <Button

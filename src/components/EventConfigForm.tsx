@@ -2,157 +2,172 @@ import { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Plus, Edit, Trash2 } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { HelpCircle, AlertCircle, List } from "lucide-react";
 
-export interface EventProduct {
-  id: string;
-  title: string;
-  price: number;
+export interface EventConfigState {
+  priceOption: string;
+  priceAmount: string;
+  priceReference: boolean;
+  language: string;
+  setActivePeriod: boolean;
+  startDate: string;
+  endDate: string;
+  allowMultipleEntries: boolean;
+  autoConfirmation: boolean;
+  autoProcessOrder: boolean;
+  activateQuantity: boolean;
+  additionalFees: boolean;
 }
 
 interface EventConfigFormProps {
-  products: EventProduct[];
-  onAddProduct: (product: EventProduct) => void;
-  onEditProduct: (product: EventProduct) => void;
-  onDeleteProduct: (id: string) => void;
+  config: EventConfigState;
+  onChange: (config: EventConfigState) => void;
+  onSetOption: () => void;
 }
 
-const EventConfigForm = ({
-  products,
-  onAddProduct,
-  onEditProduct,
-  onDeleteProduct,
-}: EventConfigFormProps) => {
-  const [isAdding, setIsAdding] = useState(false);
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [title, setTitle] = useState("");
-  const [price, setPrice] = useState("");
-
-  const resetForm = () => {
-    setTitle("");
-    setPrice("");
-    setIsAdding(false);
-    setEditingId(null);
+const EventConfigForm = ({ config, onChange, onSetOption }: EventConfigFormProps) => {
+  const update = (partial: Partial<EventConfigState>) => {
+    onChange({ ...config, ...partial });
   };
 
-  const handleSave = () => {
-    if (!title.trim() || !price.trim()) return;
-    const product: EventProduct = {
-      id: editingId || crypto.randomUUID(),
-      title: title.trim(),
-      price: parseFloat(price),
-    };
-    if (editingId) {
-      onEditProduct(product);
-    } else {
-      onAddProduct(product);
-    }
-    resetForm();
-  };
-
-  const startEdit = (p: EventProduct) => {
-    setEditingId(p.id);
-    setTitle(p.title);
-    setPrice(p.price.toString());
-    setIsAdding(true);
-  };
+  const isCustomer = config.priceOption === "customer";
 
   return (
     <div className="space-y-6">
-      <div className="rounded-lg border border-border bg-card p-4">
-        <Label className="text-sm font-semibold text-foreground">Product Options</Label>
-
-        {products.length === 0 && !isAdding ? (
-          <div className="mt-3 space-y-3">
-            <div className="flex items-center gap-2 rounded-md border border-dashed border-border bg-accent/50 px-4 py-6 text-center">
-              <div className="w-full text-sm text-muted-foreground">
-                No product option created yet
-              </div>
-            </div>
-            <Button onClick={() => setIsAdding(true)} className="w-full">
-              <Plus className="mr-2 h-4 w-4" />
-              Set Option
-            </Button>
+      {/* Price Option */}
+      <div className="rounded-lg border border-border bg-card p-4 space-y-4">
+        <div>
+          <div className="flex items-center gap-1.5">
+            <Label className="text-sm font-semibold text-foreground">
+              Price Option <span className="text-destructive">*</span>
+            </Label>
+            <HelpCircle className="h-3.5 w-3.5 text-muted-foreground" />
           </div>
-        ) : (
-          <div className="mt-3 space-y-2">
-            {products.map((p) => (
-              <div
-                key={p.id}
-                className="flex items-center justify-between rounded-md border border-border bg-accent/30 px-4 py-3"
-              >
-                <div>
-                  <p className="text-sm font-medium text-foreground">{p.title}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {p.price.toLocaleString()}
-                  </p>
-                </div>
-                <div className="flex items-center gap-1">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-8 w-8 text-muted-foreground hover:text-foreground"
-                    onClick={() => startEdit(p)}
-                  >
-                    <Edit className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-8 w-8 text-muted-foreground hover:text-destructive"
-                    onClick={() => onDeleteProduct(p.id)}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-            ))}
+          <div className="mt-2 grid grid-cols-2 gap-3">
+            <Select value={config.priceOption} onValueChange={(v) => update({ priceOption: v })}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select option" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="customer">CUSTOMER</SelectItem>
+                <SelectItem value="fixed">FIXED</SelectItem>
+                <SelectItem value="subscription">SUBSCRIPTION</SelectItem>
+              </SelectContent>
+            </Select>
+            <Input
+              value={config.priceAmount}
+              onChange={(e) => update({ priceAmount: e.target.value })}
+              placeholder="10.000"
+              type="text"
+            />
+          </div>
+        </div>
 
-            {!isAdding && (
-              <Button variant="outline" onClick={() => setIsAdding(true)} className="mt-2 w-full">
-                <Plus className="mr-2 h-4 w-4" />
-                Add Another Option
-              </Button>
-            )}
+        {isCustomer && (
+          <div className="rounded-md border border-destructive/30 bg-destructive/5 px-4 py-3">
+            <div className="flex items-start gap-2">
+              <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-destructive" />
+              <p className="text-sm text-destructive">
+                Customers will be asked to enter the amount when making a payment, and the merchant must confirm the customer's order.
+              </p>
+            </div>
           </div>
         )}
 
-        {isAdding && (
-          <div className="mt-4 space-y-3 rounded-md border border-border bg-accent/20 p-4">
+        <div className="flex items-center gap-2">
+          <Checkbox
+            id="price-ref"
+            checked={config.priceReference}
+            onCheckedChange={(v) => update({ priceReference: !!v })}
+          />
+          <label htmlFor="price-ref" className="text-sm font-medium text-foreground cursor-pointer">
+            Price reference
+          </label>
+        </div>
+
+        <Button onClick={onSetOption} className="w-full bg-primary hover:bg-primary/90">
+          <List className="mr-2 h-4 w-4" />
+          Set Option
+        </Button>
+      </div>
+
+      {/* Language */}
+      <div>
+        <Label className="text-sm font-medium text-foreground">
+          Language <span className="text-destructive">*</span>
+        </Label>
+        <Select value={config.language} onValueChange={(v) => update({ language: v })}>
+          <SelectTrigger className="mt-1.5 w-full">
+            <SelectValue placeholder="Select language" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="en">English</SelectItem>
+            <SelectItem value="id">Bahasa Indonesia</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Set event active period */}
+      <div className="space-y-3">
+        <div className="flex items-center gap-2">
+          <Checkbox
+            id="active-period"
+            checked={config.setActivePeriod}
+            onCheckedChange={(v) => update({ setActivePeriod: !!v })}
+          />
+          <label htmlFor="active-period" className="text-sm font-medium text-foreground cursor-pointer">
+            Set event active period
+          </label>
+          <HelpCircle className="h-3.5 w-3.5 text-muted-foreground" />
+        </div>
+
+        {config.setActivePeriod && (
+          <div className="grid grid-cols-2 gap-3 pl-6">
             <div>
-              <Label className="text-sm font-medium text-foreground">
-                Option Title <span className="text-destructive">*</span>
-              </Label>
+              <Label className="text-sm font-medium text-foreground">Starting Date</Label>
               <Input
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                placeholder="e.g. Basic Package"
+                type="datetime-local"
+                value={config.startDate}
+                onChange={(e) => update({ startDate: e.target.value })}
                 className="mt-1.5"
               />
             </div>
             <div>
-              <Label className="text-sm font-medium text-foreground">
-                Price <span className="text-destructive">*</span>
-              </Label>
+              <Label className="text-sm font-medium text-foreground">End Date</Label>
               <Input
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
-                placeholder="0"
-                type="number"
-                min="0"
+                type="datetime-local"
+                value={config.endDate}
+                onChange={(e) => update({ endDate: e.target.value })}
                 className="mt-1.5"
               />
             </div>
-            <div className="flex items-center gap-2 pt-1">
-              <Button size="sm" onClick={handleSave} disabled={!title.trim() || !price.trim()}>
-                {editingId ? "Save Changes" : "Add Option"}
-              </Button>
-              <Button size="sm" variant="ghost" onClick={resetForm}>
-                Cancel
-              </Button>
-            </div>
           </div>
         )}
+      </div>
+
+      {/* Checkbox options */}
+      <div className="space-y-3">
+        {[
+          { id: "multi-entries", label: "Allow customers to input multiple data entries in a single invoice", key: "allowMultipleEntries" as const },
+          { id: "auto-confirm", label: "Auto confirmation process", key: "autoConfirmation" as const },
+          { id: "auto-process", label: "Auto process order", key: "autoProcessOrder" as const },
+          { id: "quantity-config", label: "Activate quantity configuration", key: "activateQuantity" as const },
+          { id: "additional-fees", label: "Additional fees are charged to the merchant", key: "additionalFees" as const },
+        ].map(({ id, label, key }) => (
+          <div key={id} className="flex items-center gap-2">
+            <Checkbox
+              id={id}
+              checked={config[key]}
+              onCheckedChange={(v) => update({ [key]: !!v })}
+            />
+            <label htmlFor={id} className="text-sm font-medium text-foreground cursor-pointer">
+              {label}
+            </label>
+            <HelpCircle className="h-3.5 w-3.5 text-muted-foreground" />
+          </div>
+        ))}
       </div>
     </div>
   );
