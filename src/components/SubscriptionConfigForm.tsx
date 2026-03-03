@@ -24,39 +24,9 @@ const SubscriptionConfigForm = ({
   onOpenModal,
   onDeleteProduct,
   onEditProduct,
-  advancedSettings,
-  onAdvancedChange,
 }: SubscriptionConfigFormProps) => {
-  const [advancedOpen, setAdvancedOpen] = useState(false);
-
-  const checkboxItems = [
-    { key: "multipleEntries", label: "Allow multiple data entries per invoice" },
-    { key: "autoConfirmation", label: "Auto confirmation process" },
-    { key: "autoProcess", label: "Auto process order" },
-    { key: "quantityConfig", label: "Enable quantity configuration" },
-    { key: "additionalFees", label: "Additional fees charged to merchant" },
-  ];
-
   return (
     <div className="space-y-6">
-      {/* Price Option */}
-      <div>
-        <Label className="text-sm font-medium text-foreground">
-          Price Option <span className="text-destructive">*</span>
-          <HelpCircle className="ml-1 inline h-3.5 w-3.5 text-muted-foreground" />
-        </Label>
-        <Select defaultValue="subscription">
-          <SelectTrigger className="mt-1.5 w-full">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="subscription">SUBSCRIPTION</SelectItem>
-            <SelectItem value="customer">CUSTOMER</SelectItem>
-            <SelectItem value="fixed">FIXED</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-
       {/* Subscription Products */}
       <div className="rounded-lg border border-border bg-card p-4">
         <Label className="text-sm font-semibold text-foreground">Subscription Product</Label>
