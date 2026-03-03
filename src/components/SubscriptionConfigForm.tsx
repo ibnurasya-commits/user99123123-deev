@@ -8,14 +8,6 @@ interface SubscriptionConfigFormProps {
   onOpenModal: () => void;
   onDeleteProduct: (id: string) => void;
   onEditProduct: (product: SubscriptionProduct) => void;
-  advancedSettings: {
-    multipleEntries: boolean;
-    autoConfirmation: boolean;
-    autoProcess: boolean;
-    quantityConfig: boolean;
-    additionalFees: boolean;
-  };
-  onAdvancedChange: (key: string, value: boolean) => void;
 }
 
 const billingLabel = (interval: string) => {
