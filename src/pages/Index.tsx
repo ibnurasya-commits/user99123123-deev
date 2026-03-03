@@ -220,7 +220,12 @@ const Index = () => {
               {phase === "step3" && isAcceptOrder && (
                 <div className="rounded-lg border border-border bg-card p-6">
                   <h2 className="mb-5 text-base font-semibold text-foreground">Custom Field Data</h2>
-                  <CustomFieldsStep />
+                  <CustomFieldsStep
+                    fields={customFields}
+                    onChange={setCustomFields}
+                    reference={fieldReference}
+                    onReferenceChange={setFieldReference}
+                  />
                   <div className="mt-6 flex items-center justify-between">
                     <Button
                       variant="ghost"
