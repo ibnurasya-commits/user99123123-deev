@@ -1,11 +1,14 @@
 import { SubscriptionProduct } from "@/types/subscription";
-import { CheckCircle, FileText, User, Phone, Mail } from "lucide-react";
+import { CheckCircle, User, Phone, Mail } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { OrderType } from "@/components/OrderTypeSelection";
 
 interface SummaryPanelProps {
   eventName: string;
   products: SubscriptionProduct[];
-  currentStep: number;
+  orderType: OrderType | null;
+  wizardStep: number;
+  totalSteps: number;
 }
 
 const billingLabel = (interval: string) => {
@@ -17,14 +20,18 @@ const billingLabel = (interval: string) => {
   }
 };
 
-const SummaryPanel = ({ eventName, products, currentStep }: SummaryPanelProps) => {
+const SummaryPanel = ({ eventName, products, orderType, wizardStep, totalSteps }: SummaryPanelProps) => {
+  const isSubscription = orderType === "whatsapp-subscription";
+
   return (
     <div className="rounded-lg border border-border bg-card p-5">
-      <h3 className="text-sm font-semibold text-foreground">Subscription Summary</h3>
+      <h3 className="text-sm font-semibold text-foreground">
+        {isSubscription ? "Subscription Summary" : "Order Summary"}
+      </h3>
       <Separator className="my-3" />
 
-      {/* Event */}
       <div className="space-y-3">
+        {/* Event */}
         <div>
           <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Event</p>
           <p className="mt-1 text-sm text-foreground">
@@ -32,30 +39,32 @@ const SummaryPanel = ({ eventName, products, currentStep }: SummaryPanelProps) =
           </p>
         </div>
 
-        <Separator />
-
-        {/* Products */}
-        <div>
-          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Subscription Plans</p>
-          {products.length === 0 ? (
-            <p className="mt-1 text-sm italic text-muted-foreground">No products configured</p>
-          ) : (
-            <div className="mt-2 space-y-2">
-              {products.map((p) => (
-                <div key={p.id} className="flex items-center justify-between rounded-md bg-accent/50 px-3 py-2">
-                  <span className="text-sm font-medium text-foreground">{p.title}</span>
-                  <span className="text-xs text-muted-foreground">
-                    {p.amount.toLocaleString()} · {billingLabel(p.billingInterval)}
-                  </span>
+        {isSubscription && (
+          <>
+            <Separator />
+            <div>
+              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Subscription Plans</p>
+              {products.length === 0 ? (
+                <p className="mt-1 text-sm italic text-muted-foreground">No products configured</p>
+              ) : (
+                <div className="mt-2 space-y-2">
+                  {products.map((p) => (
+                    <div key={p.id} className="flex items-center justify-between rounded-md bg-accent/50 px-3 py-2">
+                      <span className="text-sm font-medium text-foreground">{p.title}</span>
+                      <span className="text-xs text-muted-foreground">
+                        {p.amount.toLocaleString()} · {billingLabel(p.billingInterval)}
+                      </span>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              )}
             </div>
-          )}
-        </div>
+          </>
+        )}
 
         <Separator />
 
-        {/* Auto-collected data */}
+        {/* Auto-collected */}
         <div>
           <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Auto-collected Fields</p>
           <div className="mt-2 space-y-1.5">
@@ -74,18 +83,19 @@ const SummaryPanel = ({ eventName, products, currentStep }: SummaryPanelProps) =
 
         <Separator />
 
-        {/* Steps progress */}
+        {/* Progress */}
         <div>
           <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Progress</p>
           <div className="mt-2 space-y-1.5">
-            {["Event Information", "Subscription Config", "Custom Fields"].map((label, i) => (
+            {(isSubscription
+              ? ["Event Information", "Subscription Config"]
+              : ["Event Information"]
+            ).map((label, i) => (
               <div key={label} className="flex items-center gap-2 text-sm">
                 <CheckCircle
-                  className={`h-4 w-4 ${
-                    i < currentStep ? "text-success" : "text-border"
-                  }`}
+                  className={`h-4 w-4 ${i + 1 < wizardStep ? "text-success" : i + 1 === wizardStep ? "text-primary" : "text-border"}`}
                 />
-                <span className={i < currentStep ? "text-foreground" : "text-muted-foreground"}>
+                <span className={i + 1 <= wizardStep ? "text-foreground" : "text-muted-foreground"}>
                   {label}
                 </span>
               </div>
