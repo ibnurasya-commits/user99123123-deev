@@ -45,6 +45,10 @@ const Index = () => {
     additionalFees: true,
   });
 
+  // Step 3 - Accept Order custom fields
+  const [customFields, setCustomFields] = useState<CustomField[]>([]);
+  const [fieldReference, setFieldReference] = useState("none");
+
   const handleSaveProduct = (product: SubscriptionProduct) => {
     setProducts((prev) => {
       const existing = prev.find((p) => p.id === product.id);
