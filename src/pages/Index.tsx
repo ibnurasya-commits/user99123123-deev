@@ -45,9 +45,7 @@ const Index = () => {
     setModalOpen(true);
   };
 
-  const handleAdvancedChange = (key: string, value: boolean) => {
-    setAdvancedSettings((prev) => ({ ...prev, [key]: value }));
-  };
+
 
   const canCreate = eventName.trim() && products.length > 0;
 
