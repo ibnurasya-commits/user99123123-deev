@@ -30,7 +30,20 @@ const Index = () => {
   const [editingProduct, setEditingProduct] = useState<SubscriptionProduct | null>(null);
 
   // Step 2 - Accept Order
-  const [eventProducts, setEventProducts] = useState<EventProduct[]>([]);
+  const [eventConfig, setEventConfig] = useState<EventConfigState>({
+    priceOption: "customer",
+    priceAmount: "",
+    priceReference: true,
+    language: "en",
+    setActivePeriod: false,
+    startDate: "",
+    endDate: "",
+    allowMultipleEntries: true,
+    autoConfirmation: true,
+    autoProcessOrder: true,
+    activateQuantity: true,
+    additionalFees: true,
+  });
 
   const handleSaveProduct = (product: SubscriptionProduct) => {
     setProducts((prev) => {
