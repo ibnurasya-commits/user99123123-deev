@@ -1,6 +1,6 @@
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Plus, Edit, Trash2, AlertCircle } from "lucide-react";
+import { Plus, Edit, Trash2 } from "lucide-react";
 import { SubscriptionProduct } from "@/types/subscription";
 
 interface SubscriptionConfigFormProps {
