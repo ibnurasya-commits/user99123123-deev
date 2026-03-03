@@ -7,6 +7,8 @@ import { Upload } from "lucide-react";
 interface EventInfoFormProps {
   eventName: string;
   setEventName: (v: string) => void;
+  language: string;
+  setLanguage: (v: string) => void;
   eventDescription: string;
   setEventDescription: (v: string) => void;
   bannerFile: File | null;
