@@ -81,7 +81,7 @@ const Index = () => {
     });
   };
 
-  const currentWizardStep = phase === "step1" ? 1 : 2;
+  const currentWizardStep = phase === "step1" ? 1 : phase === "step2" ? 2 : 3;
 
   return (
     <div className="min-h-screen bg-background">
