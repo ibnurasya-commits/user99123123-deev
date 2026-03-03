@@ -4,14 +4,15 @@ import OrderTypeSelection, { OrderType } from "@/components/OrderTypeSelection";
 import WizardStepIndicator from "@/components/WizardStepIndicator";
 import EventInfoForm from "@/components/EventInfoForm";
 import SubscriptionConfigForm from "@/components/SubscriptionConfigForm";
+import EventConfigForm, { EventProduct } from "@/components/EventConfigForm";
+import CustomFieldsStep from "@/components/CustomFieldsStep";
 import SummaryPanel from "@/components/SummaryPanel";
 import SubscriptionProductModal from "@/components/SubscriptionProductModal";
 import { SubscriptionProduct } from "@/types/subscription";
 import { toast } from "@/hooks/use-toast";
 import { ArrowLeft } from "lucide-react";
 
-type WizardPhase = "type-select" | "step1" | "step2";
-
+type WizardPhase = "type-select" | "step1" | "step2" | "step3";
 const Index = () => {
   const [phase, setPhase] = useState<WizardPhase>("type-select");
   const [orderType, setOrderType] = useState<OrderType | null>(null);
@@ -23,10 +24,13 @@ const Index = () => {
   const [termsUrl, setTermsUrl] = useState("");
   const [language, setLanguage] = useState("en");
 
-  // Step 2
+  // Step 2 - Subscription
   const [products, setProducts] = useState<SubscriptionProduct[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<SubscriptionProduct | null>(null);
+
+  // Step 2 - Accept Order
+  const [eventProducts, setEventProducts] = useState<EventProduct[]>([]);
 
   const handleSaveProduct = (product: SubscriptionProduct) => {
     setProducts((prev) => {
@@ -46,7 +50,8 @@ const Index = () => {
   };
 
   const isSubscription = orderType === "whatsapp-subscription";
-  const totalSteps = isSubscription ? 2 : 1;
+  const isAcceptOrder = orderType === "accept-order";
+  const totalSteps = isSubscription ? 2 : 3;
 
   const step1Valid = eventName.trim().length > 0;
   const canCreate = isSubscription ? step1Valid && products.length > 0 : step1Valid;
@@ -57,8 +62,12 @@ const Index = () => {
 
   const handleContinueFromStep1 = () => {
     if (!step1Valid) return;
-    if (isSubscription) {
-      setPhase("step2");
+    setPhase("step2");
+  };
+
+  const handleContinueFromStep2 = () => {
+    if (isAcceptOrder) {
+      setPhase("step3");
     } else {
       handleCreate();
     }
@@ -72,7 +81,7 @@ const Index = () => {
     });
   };
 
-  const currentWizardStep = phase === "step1" ? 1 : 2;
+  const currentWizardStep = phase === "step1" ? 1 : phase === "step2" ? 2 : 3;
 
   return (
     <div className="min-h-screen bg-background">
@@ -135,7 +144,33 @@ const Index = () => {
                       Back
                     </Button>
                     <Button onClick={handleContinueFromStep1} disabled={!step1Valid}>
-                      {isSubscription ? "Continue" : "Create Order"}
+                      Continue
+                    </Button>
+                  </div>
+                </div>
+              )}
+
+              {/* Accept Order - Step 2: Event Configuration */}
+              {phase === "step2" && isAcceptOrder && (
+                <div className="rounded-lg border border-border bg-card p-6">
+                  <h2 className="mb-5 text-base font-semibold text-foreground">Event Configuration</h2>
+                  <EventConfigForm
+                    products={eventProducts}
+                    onAddProduct={(p) => setEventProducts((prev) => [...prev, p])}
+                    onEditProduct={(p) => setEventProducts((prev) => prev.map((ep) => ep.id === p.id ? p : ep))}
+                    onDeleteProduct={(id) => setEventProducts((prev) => prev.filter((p) => p.id !== id))}
+                  />
+                  <div className="mt-6 flex items-center justify-between">
+                    <Button
+                      variant="ghost"
+                      onClick={() => setPhase("step1")}
+                      className="text-muted-foreground"
+                    >
+                      <ArrowLeft className="mr-2 h-4 w-4" />
+                      Back
+                    </Button>
+                    <Button onClick={handleContinueFromStep2}>
+                      Continue
                     </Button>
                   </div>
                 </div>
@@ -164,6 +199,27 @@ const Index = () => {
                     </Button>
                     <Button onClick={handleCreate} disabled={!canCreate}>
                       Create Subscription
+                    </Button>
+                  </div>
+                </div>
+              )}
+
+              {/* Accept Order - Step 3: Custom Fields */}
+              {phase === "step3" && isAcceptOrder && (
+                <div className="rounded-lg border border-border bg-card p-6">
+                  <h2 className="mb-5 text-base font-semibold text-foreground">Custom Field Data</h2>
+                  <CustomFieldsStep />
+                  <div className="mt-6 flex items-center justify-between">
+                    <Button
+                      variant="ghost"
+                      onClick={() => setPhase("step2")}
+                      className="text-muted-foreground"
+                    >
+                      <ArrowLeft className="mr-2 h-4 w-4" />
+                      Back
+                    </Button>
+                    <Button onClick={handleCreate} disabled={!canCreate}>
+                      Create Event
                     </Button>
                   </div>
                 </div>
