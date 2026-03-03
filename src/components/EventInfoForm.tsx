@@ -2,11 +2,14 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Upload } from "lucide-react";
 
 interface EventInfoFormProps {
   eventName: string;
   setEventName: (v: string) => void;
+  language: string;
+  setLanguage: (v: string) => void;
   eventDescription: string;
   setEventDescription: (v: string) => void;
   bannerFile: File | null;
@@ -17,6 +20,7 @@ interface EventInfoFormProps {
 
 const EventInfoForm = ({
   eventName, setEventName,
+  language, setLanguage,
   eventDescription, setEventDescription,
   bannerFile, setBannerFile,
   termsUrl, setTermsUrl,
@@ -49,6 +53,21 @@ const EventInfoForm = ({
         <p className="mt-1 text-xs text-muted-foreground">
           {eventName.length}/200 characters remaining
         </p>
+      </div>
+
+      <div>
+        <Label className="text-sm font-medium text-foreground">
+          Language <span className="text-destructive">*</span>
+        </Label>
+        <Select value={language} onValueChange={setLanguage}>
+          <SelectTrigger className="mt-1.5 w-full">
+            <SelectValue placeholder="Select language" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="en">English</SelectItem>
+            <SelectItem value="id">Bahasa Indonesia</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       <div>

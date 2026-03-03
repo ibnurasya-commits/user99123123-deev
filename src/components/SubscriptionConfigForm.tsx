@@ -1,10 +1,6 @@
-import { useState } from "react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { ChevronDown, Plus, Edit, Trash2, HelpCircle, AlertCircle } from "lucide-react";
+import { Plus, Edit, Trash2, AlertCircle } from "lucide-react";
 import { SubscriptionProduct } from "@/types/subscription";
 
 interface SubscriptionConfigFormProps {
@@ -12,14 +8,6 @@ interface SubscriptionConfigFormProps {
   onOpenModal: () => void;
   onDeleteProduct: (id: string) => void;
   onEditProduct: (product: SubscriptionProduct) => void;
-  advancedSettings: {
-    multipleEntries: boolean;
-    autoConfirmation: boolean;
-    autoProcess: boolean;
-    quantityConfig: boolean;
-    additionalFees: boolean;
-  };
-  onAdvancedChange: (key: string, value: boolean) => void;
 }
 
 const billingLabel = (interval: string) => {
@@ -36,39 +24,9 @@ const SubscriptionConfigForm = ({
   onOpenModal,
   onDeleteProduct,
   onEditProduct,
-  advancedSettings,
-  onAdvancedChange,
 }: SubscriptionConfigFormProps) => {
-  const [advancedOpen, setAdvancedOpen] = useState(false);
-
-  const checkboxItems = [
-    { key: "multipleEntries", label: "Allow multiple data entries per invoice" },
-    { key: "autoConfirmation", label: "Auto confirmation process" },
-    { key: "autoProcess", label: "Auto process order" },
-    { key: "quantityConfig", label: "Enable quantity configuration" },
-    { key: "additionalFees", label: "Additional fees charged to merchant" },
-  ];
-
   return (
     <div className="space-y-6">
-      {/* Price Option */}
-      <div>
-        <Label className="text-sm font-medium text-foreground">
-          Price Option <span className="text-destructive">*</span>
-          <HelpCircle className="ml-1 inline h-3.5 w-3.5 text-muted-foreground" />
-        </Label>
-        <Select defaultValue="subscription">
-          <SelectTrigger className="mt-1.5 w-full">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="subscription">SUBSCRIPTION</SelectItem>
-            <SelectItem value="customer">CUSTOMER</SelectItem>
-            <SelectItem value="fixed">FIXED</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-
       {/* Subscription Products */}
       <div className="rounded-lg border border-border bg-card p-4">
         <Label className="text-sm font-semibold text-foreground">Subscription Product</Label>
@@ -134,30 +92,6 @@ const SubscriptionConfigForm = ({
         </p>
       </div>
 
-      {/* Advanced Settings */}
-      <Collapsible open={advancedOpen} onOpenChange={setAdvancedOpen}>
-        <CollapsibleTrigger asChild>
-          <button
-            type="button"
-            className="flex w-full items-center justify-between rounded-md border border-border bg-card px-4 py-3 text-sm font-medium text-foreground hover:bg-accent"
-          >
-            Advanced Settings
-            <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${advancedOpen ? "rotate-180" : ""}`} />
-          </button>
-        </CollapsibleTrigger>
-        <CollapsibleContent className="mt-2 space-y-3 pl-1">
-          {checkboxItems.map(({ key, label }) => (
-            <label key={key} className="flex cursor-pointer items-center gap-3">
-              <Checkbox
-                checked={advancedSettings[key as keyof typeof advancedSettings]}
-                onCheckedChange={(v) => onAdvancedChange(key, v as boolean)}
-              />
-              <span className="text-sm text-foreground">{label}</span>
-              <HelpCircle className="h-3.5 w-3.5 text-muted-foreground" />
-            </label>
-          ))}
-        </CollapsibleContent>
-      </Collapsible>
     </div>
   );
 };

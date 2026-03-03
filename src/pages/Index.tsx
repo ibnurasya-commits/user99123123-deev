@@ -20,17 +20,13 @@ const Index = () => {
   const [bannerFile, setBannerFile] = useState<File | null>(null);
   const [termsUrl, setTermsUrl] = useState("");
 
+  // Step 1 extra
+  const [language, setLanguage] = useState("en");
+
   // Step 2
   const [products, setProducts] = useState<SubscriptionProduct[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<SubscriptionProduct | null>(null);
-  const [advancedSettings, setAdvancedSettings] = useState({
-    multipleEntries: false,
-    autoConfirmation: false,
-    autoProcess: false,
-    quantityConfig: false,
-    additionalFees: false,
-  });
 
   const handleSaveProduct = (product: SubscriptionProduct) => {
     setProducts((prev) => {
@@ -49,9 +45,7 @@ const Index = () => {
     setModalOpen(true);
   };
 
-  const handleAdvancedChange = (key: string, value: boolean) => {
-    setAdvancedSettings((prev) => ({ ...prev, [key]: value }));
-  };
+
 
   const canCreate = eventName.trim() && products.length > 0;
 
@@ -87,6 +81,8 @@ const Index = () => {
               <EventInfoForm
                 eventName={eventName}
                 setEventName={setEventName}
+                language={language}
+                setLanguage={setLanguage}
                 eventDescription={eventDescription}
                 setEventDescription={setEventDescription}
                 bannerFile={bannerFile}
@@ -110,8 +106,6 @@ const Index = () => {
                 }}
                 onDeleteProduct={handleDeleteProduct}
                 onEditProduct={handleEditProduct}
-                advancedSettings={advancedSettings}
-                onAdvancedChange={handleAdvancedChange}
               />
             </StepSection>
 
