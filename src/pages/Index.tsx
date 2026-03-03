@@ -62,8 +62,12 @@ const Index = () => {
 
   const handleContinueFromStep1 = () => {
     if (!step1Valid) return;
-    if (isSubscription) {
-      setPhase("step2");
+    setPhase("step2");
+  };
+
+  const handleContinueFromStep2 = () => {
+    if (isAcceptOrder) {
+      setPhase("step3");
     } else {
       handleCreate();
     }
