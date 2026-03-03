@@ -83,6 +83,8 @@ const Index = () => {
               <EventInfoForm
                 eventName={eventName}
                 setEventName={setEventName}
+                language={language}
+                setLanguage={setLanguage}
                 eventDescription={eventDescription}
                 setEventDescription={setEventDescription}
                 bannerFile={bannerFile}
