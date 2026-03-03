@@ -123,24 +123,27 @@ const SummaryPanel = ({ eventName, products, orderType, wizardStep, totalSteps, 
 
         <Separator />
 
-        {/* Auto-collected */}
-        <div>
-          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Auto-collected Fields</p>
-          <div className="mt-2 space-y-1.5">
-            {[
-              { icon: User, label: "Name" },
-              { icon: Phone, label: "Phone Number" },
-              { icon: Mail, label: "Email" },
-            ].map(({ icon: Icon, label }) => (
-              <div key={label} className="flex items-center gap-2 text-sm text-foreground">
-                <Icon className="h-3.5 w-3.5 text-muted-foreground" />
-                {label}
+        {/* Auto-collected - only for Subscription */}
+        {isSubscription && (
+          <>
+            <Separator />
+            <div>
+              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Auto-collected Fields</p>
+              <div className="mt-2 space-y-1.5">
+                {[
+                  { icon: User, label: "Name" },
+                  { icon: Phone, label: "Phone Number" },
+                  { icon: Mail, label: "Email" },
+                ].map(({ icon: Icon, label }) => (
+                  <div key={label} className="flex items-center gap-2 text-sm text-foreground">
+                    <Icon className="h-3.5 w-3.5 text-muted-foreground" />
+                    {label}
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-        </div>
-
-        <Separator />
+            </div>
+          </>
+        )}
 
         {/* Progress */}
         <div>
