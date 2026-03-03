@@ -24,10 +24,13 @@ const Index = () => {
   const [termsUrl, setTermsUrl] = useState("");
   const [language, setLanguage] = useState("en");
 
-  // Step 2
+  // Step 2 - Subscription
   const [products, setProducts] = useState<SubscriptionProduct[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<SubscriptionProduct | null>(null);
+
+  // Step 2 - Accept Order
+  const [eventProducts, setEventProducts] = useState<EventProduct[]>([]);
 
   const handleSaveProduct = (product: SubscriptionProduct) => {
     setProducts((prev) => {
