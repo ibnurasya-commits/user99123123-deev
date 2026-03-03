@@ -5,7 +5,7 @@ import WizardStepIndicator from "@/components/WizardStepIndicator";
 import EventInfoForm from "@/components/EventInfoForm";
 import SubscriptionConfigForm from "@/components/SubscriptionConfigForm";
 import EventConfigForm, { EventConfigState } from "@/components/EventConfigForm";
-import CustomFieldsStep from "@/components/CustomFieldsStep";
+import CustomFieldsStep, { CustomField } from "@/components/CustomFieldsStep";
 import SummaryPanel from "@/components/SummaryPanel";
 import SubscriptionProductModal from "@/components/SubscriptionProductModal";
 import { SubscriptionProduct } from "@/types/subscription";
@@ -44,6 +44,10 @@ const Index = () => {
     activateQuantity: true,
     additionalFees: true,
   });
+
+  // Step 3 - Accept Order custom fields
+  const [customFields, setCustomFields] = useState<CustomField[]>([]);
+  const [fieldReference, setFieldReference] = useState("none");
 
   const handleSaveProduct = (product: SubscriptionProduct) => {
     setProducts((prev) => {
@@ -220,7 +224,12 @@ const Index = () => {
               {phase === "step3" && isAcceptOrder && (
                 <div className="rounded-lg border border-border bg-card p-6">
                   <h2 className="mb-5 text-base font-semibold text-foreground">Custom Field Data</h2>
-                  <CustomFieldsStep />
+                  <CustomFieldsStep
+                    fields={customFields}
+                    onChange={setCustomFields}
+                    reference={fieldReference}
+                    onReferenceChange={setFieldReference}
+                  />
                   <div className="mt-6 flex items-center justify-between">
                     <Button
                       variant="ghost"
