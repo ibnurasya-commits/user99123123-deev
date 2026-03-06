@@ -1,5 +1,7 @@
 import { cn } from "@/lib/utils";
 import { ShoppingCart, RefreshCw } from "lucide-react";
+import { useLanguage } from "@/i18n/LanguageContext";
+import { TranslationKey } from "@/i18n/translations";
 
 export type OrderType = "accept-order" | "whatsapp-subscription";
 
@@ -8,27 +10,27 @@ interface OrderTypeSelectionProps {
   onSelect: (type: OrderType) => void;
 }
 
-const options: { value: OrderType; title: string; description: string; icon: typeof ShoppingCart }[] = [
+const options: { value: OrderType; titleKey: TranslationKey; descKey: TranslationKey; icon: typeof ShoppingCart }[] = [
   {
     value: "accept-order",
-    title: "Accept Order",
-    description:
-      "Create a one-time order flow where customers can select a product or service, provide required information, and complete payment through WhatsApp. Best suited for single purchases or fixed-price items.",
+    titleKey: "acceptOrderTitle",
+    descKey: "acceptOrderDesc",
     icon: ShoppingCart,
   },
   {
     value: "whatsapp-subscription",
-    title: "WhatsApp Subscription",
-    description:
-      "Create a recurring subscription order that automatically charges customers on a defined schedule. Ideal for memberships, recurring services, or subscription-based products managed entirely through WhatsApp.",
+    titleKey: "whatsappSubscriptionTitle",
+    descKey: "whatsappSubscriptionDesc",
     icon: RefreshCw,
   },
 ];
 
 const OrderTypeSelection = ({ selected, onSelect }: OrderTypeSelectionProps) => {
+  const { t } = useLanguage();
+
   return (
     <div className="space-y-4">
-      {options.map(({ value, title, description, icon: Icon }) => {
+      {options.map(({ value, titleKey, descKey, icon: Icon }) => {
         const isSelected = selected === value;
         return (
           <button
@@ -52,7 +54,7 @@ const OrderTypeSelection = ({ selected, onSelect }: OrderTypeSelectionProps) => 
             </div>
             <div className="min-w-0">
               <div className="flex items-center gap-3">
-                <p className="text-sm font-semibold text-foreground">{title}</p>
+                <p className="text-sm font-semibold text-foreground">{t(titleKey)}</p>
                 <span
                   className={cn(
                     "inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2",
@@ -62,7 +64,7 @@ const OrderTypeSelection = ({ selected, onSelect }: OrderTypeSelectionProps) => 
                   {isSelected && <span className="h-2 w-2 rounded-full bg-primary" />}
                 </span>
               </div>
-              <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{description}</p>
+              <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{t(descKey)}</p>
             </div>
           </button>
         );

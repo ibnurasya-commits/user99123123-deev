@@ -17,6 +17,7 @@ import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { SubscriptionProduct } from "@/types/subscription";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 interface SubscriptionProductModalProps {
   open: boolean;
@@ -31,6 +32,7 @@ const SubscriptionProductModal = ({
   onSave,
   editProduct,
 }: SubscriptionProductModalProps) => {
+  const { t } = useLanguage();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
@@ -67,11 +69,11 @@ const SubscriptionProductModal = ({
 
   const validate = () => {
     const errs: Record<string, string> = {};
-    if (!title.trim()) errs.title = "Product title is required";
-    if (!amount || parseFloat(amount) <= 0) errs.amount = "Valid amount is required";
-    if (durationType === "date" && !endDate) errs.endDate = "End date is required";
+    if (!title.trim()) errs.title = t("productTitleRequired");
+    if (!amount || parseFloat(amount) <= 0) errs.amount = t("validAmountRequired");
+    if (durationType === "date" && !endDate) errs.endDate = t("endDateRequired");
     if (durationType === "payments" && (!maxPayments || parseInt(maxPayments) <= 0))
-      errs.maxPayments = "Valid number of payments is required";
+      errs.maxPayments = t("validPaymentsRequired");
     setErrors(errs);
     return Object.keys(errs).length === 0;
   };
@@ -96,14 +98,14 @@ const SubscriptionProductModal = ({
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
       <DialogContent className="max-w-lg">
         <DialogHeader>
-          <DialogTitle>{editProduct ? "Edit Subscription Product" : "Set Subscription Product"}</DialogTitle>
+          <DialogTitle>{editProduct ? t("editSubscriptionProduct") : t("setSubscriptionProductTitle")}</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-5 py-2">
           {/* Title */}
           <div>
             <Label className="text-sm font-medium">
-              Product Title <span className="text-destructive">*</span>
+              {t("productTitle")} <span className="text-destructive">*</span>
             </Label>
             <Input
               value={title}
@@ -116,7 +118,7 @@ const SubscriptionProductModal = ({
 
           {/* Description */}
           <div>
-            <Label className="text-sm font-medium">Product Description</Label>
+            <Label className="text-sm font-medium">{t("productDescription")}</Label>
             <Textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
@@ -129,7 +131,7 @@ const SubscriptionProductModal = ({
           {/* Amount */}
           <div>
             <Label className="text-sm font-medium">
-              Amount <span className="text-destructive">*</span>
+              {t("amount")} <span className="text-destructive">*</span>
             </Label>
             <Input
               type="number"
@@ -144,16 +146,16 @@ const SubscriptionProductModal = ({
 
           {/* Billing Interval */}
           <div>
-            <Label className="text-sm font-medium">Billing Interval</Label>
+            <Label className="text-sm font-medium">{t("billingInterval")}</Label>
             <RadioGroup
               value={billingInterval}
               onValueChange={(v) => setBillingInterval(v as typeof billingInterval)}
               className="mt-2 flex gap-1"
             >
               {[
-                { value: "monthly", label: "Monthly" },
-                { value: "yearly", label: "Yearly" },
-                { value: "6months", label: "Every 6 Months" },
+                { value: "monthly", label: t("monthly") },
+                { value: "yearly", label: t("yearly") },
+                { value: "6months", label: t("every6Months") },
               ].map((opt) => (
                 <label
                   key={opt.value}
@@ -173,7 +175,7 @@ const SubscriptionProductModal = ({
 
           {/* Duration */}
           <div>
-            <Label className="text-sm font-medium">Subscription Duration</Label>
+            <Label className="text-sm font-medium">{t("subscriptionDuration")}</Label>
             <RadioGroup
               value={durationType}
               onValueChange={(v) => setDurationType(v as typeof durationType)}
@@ -181,13 +183,13 @@ const SubscriptionProductModal = ({
             >
               <label className="flex cursor-pointer items-center gap-3">
                 <RadioGroupItem value="never" />
-                <span className="text-sm">Never Ends</span>
+                <span className="text-sm">{t("neverEnds")}</span>
               </label>
 
               <div>
                 <label className="flex cursor-pointer items-center gap-3">
                   <RadioGroupItem value="date" />
-                  <span className="text-sm">Ends on Specific Date</span>
+                  <span className="text-sm">{t("endsOnDate")}</span>
                 </label>
                 {durationType === "date" && (
                   <div className="ml-7 mt-2">
@@ -201,7 +203,7 @@ const SubscriptionProductModal = ({
                           )}
                         >
                           <CalendarIcon className="mr-2 h-4 w-4" />
-                          {endDate ? format(endDate, "dd/MM/yyyy") : "Select end date"}
+                          {endDate ? format(endDate, "dd/MM/yyyy") : t("selectEndDate")}
                         </Button>
                       </PopoverTrigger>
                       <PopoverContent className="w-auto p-0" align="start">
@@ -223,7 +225,7 @@ const SubscriptionProductModal = ({
               <div>
                 <label className="flex cursor-pointer items-center gap-3">
                   <RadioGroupItem value="payments" />
-                  <span className="text-sm">Ends after X Payments</span>
+                  <span className="text-sm">{t("endsAfterPayments")}</span>
                 </label>
                 {durationType === "payments" && (
                   <div className="ml-7 mt-2">
@@ -231,7 +233,7 @@ const SubscriptionProductModal = ({
                       type="number"
                       value={maxPayments}
                       onChange={(e) => setMaxPayments(e.target.value)}
-                      placeholder="Number of payments"
+                      placeholder={t("numberOfPayments")}
                       className="w-[220px]"
                       min={1}
                     />
@@ -244,9 +246,9 @@ const SubscriptionProductModal = ({
         </div>
 
         <DialogFooter>
-          <Button variant="outline" onClick={onClose}>Cancel</Button>
+          <Button variant="outline" onClick={onClose}>{t("cancel")}</Button>
           <Button onClick={handleSave}>
-            {editProduct ? "Save Changes" : "Add Subscription"}
+            {editProduct ? t("saveChanges") : t("addSubscription")}
           </Button>
         </DialogFooter>
       </DialogContent>

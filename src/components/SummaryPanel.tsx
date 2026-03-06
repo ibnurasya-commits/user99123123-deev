@@ -4,6 +4,7 @@ import { Separator } from "@/components/ui/separator";
 import { OrderType } from "@/components/OrderTypeSelection";
 import { EventConfigState } from "@/components/EventConfigForm";
 import { CustomField } from "@/components/CustomFieldsStep";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 interface SummaryPanelProps {
   eventName: string;
@@ -15,41 +16,42 @@ interface SummaryPanelProps {
   customFields?: CustomField[];
 }
 
-const billingLabel = (interval: string) => {
-  switch (interval) {
-    case "monthly": return "Monthly";
-    case "yearly": return "Yearly";
-    case "6months": return "Every 6 Months";
-    default: return "";
-  }
-};
-
-const priceOptionLabel = (opt: string) => {
-  switch (opt) {
-    case "customer": return "Set by Customer";
-    case "fixed": return "Fixed Price";
-    case "subscription": return "Subscription";
-    default: return opt;
-  }
-};
-
 const SummaryPanel = ({ eventName, products, orderType, wizardStep, totalSteps, eventConfig, customFields }: SummaryPanelProps) => {
+  const { t } = useLanguage();
   const isSubscription = orderType === "whatsapp-subscription";
   const isAcceptOrder = orderType === "accept-order";
+
+  const billingLabel = (interval: string) => {
+    switch (interval) {
+      case "monthly": return t("monthly");
+      case "yearly": return t("yearly");
+      case "6months": return t("every6Months");
+      default: return "";
+    }
+  };
+
+  const priceOptLabel = (opt: string) => {
+    switch (opt) {
+      case "customer": return t("setByCustomer");
+      case "fixed": return t("fixedPrice");
+      case "subscription": return t("subscription");
+      default: return opt;
+    }
+  };
 
   return (
     <div className="rounded-lg border border-border bg-card p-5">
       <h3 className="text-sm font-semibold text-foreground">
-        {isSubscription ? "Subscription Summary" : "Accept Order Summary"}
+        {isSubscription ? t("subscriptionSummary") : t("acceptOrderSummary")}
       </h3>
       <Separator className="my-3" />
 
       <div className="space-y-3">
         {/* Event */}
         <div>
-          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Event</p>
+          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{t("event")}</p>
           <p className="mt-1 text-sm text-foreground">
-            {eventName || <span className="italic text-muted-foreground">No name set</span>}
+            {eventName || <span className="italic text-muted-foreground">{t("noNameSet")}</span>}
           </p>
         </div>
 
@@ -58,9 +60,9 @@ const SummaryPanel = ({ eventName, products, orderType, wizardStep, totalSteps, 
           <>
             <Separator />
             <div>
-              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Subscription Plans</p>
+              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{t("subscriptionPlans")}</p>
               {products.length === 0 ? (
-                <p className="mt-1 text-sm italic text-muted-foreground">No products configured</p>
+                <p className="mt-1 text-sm italic text-muted-foreground">{t("noProductsConfigured")}</p>
               ) : (
                 <div className="mt-2 space-y-2">
                   {products.map((p) => (
@@ -82,21 +84,21 @@ const SummaryPanel = ({ eventName, products, orderType, wizardStep, totalSteps, 
           <>
             <Separator />
             <div>
-              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Event Configuration</p>
+              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{t("eventConfiguration")}</p>
               <div className="mt-2 space-y-1.5 text-sm">
                 <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">Price Option</span>
-                  <span className="text-foreground">{priceOptionLabel(eventConfig.priceOption)}</span>
+                  <span className="text-muted-foreground">{t("priceOptionLabel")}</span>
+                  <span className="text-foreground">{priceOptLabel(eventConfig.priceOption)}</span>
                 </div>
                 {eventConfig.priceAmount && (
                   <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground">Amount</span>
+                    <span className="text-muted-foreground">{t("amount")}</span>
                     <span className="text-foreground">{eventConfig.priceAmount}</span>
                   </div>
                 )}
                 <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">Active Period</span>
-                  <span className="text-foreground">{eventConfig.setActivePeriod ? "Yes" : "No"}</span>
+                  <span className="text-muted-foreground">{t("activePeriod")}</span>
+                  <span className="text-foreground">{eventConfig.setActivePeriod ? t("yes") : t("no")}</span>
                 </div>
               </div>
             </div>
@@ -108,12 +110,12 @@ const SummaryPanel = ({ eventName, products, orderType, wizardStep, totalSteps, 
           <>
             <Separator />
             <div>
-              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Custom Fields</p>
+              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{t("customFields")}</p>
               <div className="mt-2 space-y-1.5">
                 {customFields.map((f, i) => (
                   <div key={f.id} className="flex items-center gap-2 rounded-md bg-accent/50 px-3 py-1.5">
-                    <span className="text-xs font-medium text-muted-foreground">Step {i + 1}</span>
-                    <span className="text-sm text-foreground">{f.label || "Untitled"}</span>
+                    <span className="text-xs font-medium text-muted-foreground">{t("stepOf", { current: i + 1, total: customFields.length })}</span>
+                    <span className="text-sm text-foreground">{f.label || t("untitled")}</span>
                   </div>
                 ))}
               </div>
@@ -128,12 +130,12 @@ const SummaryPanel = ({ eventName, products, orderType, wizardStep, totalSteps, 
           <>
             <Separator />
             <div>
-              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Auto-collected Fields</p>
+              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{t("autoCollectedFields")}</p>
               <div className="mt-2 space-y-1.5">
                 {[
-                  { icon: User, label: "Name" },
-                  { icon: Phone, label: "Phone Number" },
-                  { icon: Mail, label: "Email" },
+                  { icon: User, label: t("name") },
+                  { icon: Phone, label: t("phoneNumber") },
+                  { icon: Mail, label: t("email") },
                 ].map(({ icon: Icon, label }) => (
                   <div key={label} className="flex items-center gap-2 text-sm text-foreground">
                     <Icon className="h-3.5 w-3.5 text-muted-foreground" />
@@ -147,11 +149,11 @@ const SummaryPanel = ({ eventName, products, orderType, wizardStep, totalSteps, 
 
         {/* Progress */}
         <div>
-          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Progress</p>
+          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{t("progress")}</p>
           <div className="mt-2 space-y-1.5">
             {(isSubscription
-              ? ["Event Information", "Subscription Config"]
-              : ["Event Information", "Event Configuration", "Custom Fields"]
+              ? [t("eventInfo"), t("subscriptionConfig")]
+              : [t("eventInfo"), t("eventConfiguration"), t("customFields")]
             ).map((label, i) => (
               <div key={label} className="flex items-center gap-2 text-sm">
                 <CheckCircle

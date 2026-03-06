@@ -4,6 +4,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Upload } from "lucide-react";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 interface EventInfoFormProps {
   eventName: string;
@@ -25,6 +26,7 @@ const EventInfoForm = ({
   bannerFile, setBannerFile,
   termsUrl, setTermsUrl,
 }: EventInfoFormProps) => {
+  const { t } = useLanguage();
   const [bannerPreview, setBannerPreview] = useState<string | null>(null);
 
   const handleBannerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,7 +43,7 @@ const EventInfoForm = ({
     <div className="space-y-5">
       <div>
         <Label className="text-sm font-medium text-foreground">
-          Event Name <span className="text-destructive">*</span>
+          {t("eventName")} <span className="text-destructive">*</span>
         </Label>
         <Input
           value={eventName}
@@ -51,28 +53,28 @@ const EventInfoForm = ({
           maxLength={200}
         />
         <p className="mt-1 text-xs text-muted-foreground">
-          {eventName.length}/200 characters remaining
+          {t("charactersRemaining", { count: eventName.length, max: 200 })}
         </p>
       </div>
 
       <div>
         <Label className="text-sm font-medium text-foreground">
-          Language <span className="text-destructive">*</span>
+          {t("language")} <span className="text-destructive">*</span>
         </Label>
         <Select value={language} onValueChange={setLanguage}>
           <SelectTrigger className="mt-1.5 w-full">
-            <SelectValue placeholder="Select language" />
+            <SelectValue placeholder={t("language")} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="en">English</SelectItem>
-            <SelectItem value="id">Bahasa Indonesia</SelectItem>
+            <SelectItem value="en">{t("english")}</SelectItem>
+            <SelectItem value="id">{t("bahasaIndonesia")}</SelectItem>
           </SelectContent>
         </Select>
       </div>
 
       <div>
         <Label className="text-sm font-medium text-foreground">
-          Event Description <span className="text-destructive">*</span>
+          {t("eventDescription")} <span className="text-destructive">*</span>
         </Label>
         {bannerPreview && (
           <div className="mt-1.5 overflow-hidden rounded-lg border border-border">
@@ -85,7 +87,7 @@ const EventInfoForm = ({
             className="flex cursor-pointer items-center justify-center gap-2 rounded-lg border-2 border-dashed border-border bg-card px-4 py-8 text-sm text-muted-foreground transition-colors hover:border-primary/50 hover:bg-accent"
           >
             <Upload className="h-5 w-5" />
-            <span>{bannerFile ? bannerFile.name : "Click to upload banner image"}</span>
+            <span>{bannerFile ? bannerFile.name : t("clickToUploadBanner")}</span>
           </label>
           <input
             id="banner-upload"
@@ -111,13 +113,13 @@ const EventInfoForm = ({
           maxLength={700}
         />
         <p className="mt-1 text-xs text-muted-foreground">
-          {eventDescription.length}/700 characters remaining
+          {t("charactersRemaining", { count: eventDescription.length, max: 700 })}
         </p>
       </div>
 
       <div>
         <Label className="text-sm font-medium text-foreground">
-          T&C URL
+          {t("termsLink")}
         </Label>
         <Input
           value={termsUrl}
