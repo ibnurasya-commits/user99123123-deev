@@ -1,8 +1,8 @@
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Plus, Trash2, List } from "lucide-react";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 export interface CustomField {
   id: string;
@@ -17,6 +17,8 @@ interface CustomFieldsStepProps {
 }
 
 const CustomFieldsStep = ({ fields, onChange, reference, onReferenceChange }: CustomFieldsStepProps) => {
+  const { t } = useLanguage();
+
   const addField = () => {
     onChange([...fields, { id: crypto.randomUUID(), label: "" }]);
   };
@@ -34,17 +36,17 @@ const CustomFieldsStep = ({ fields, onChange, reference, onReferenceChange }: Cu
       {/* Header row */}
       <div className="flex items-center justify-between rounded-lg border border-border bg-card px-4 py-3">
         <span className="text-sm font-medium text-foreground">
-          Ask customer to fill data as you need
+          {t("askCustomerToFill")}
         </span>
         <Select value={reference} onValueChange={onReferenceChange}>
           <SelectTrigger className="w-48">
-            <SelectValue placeholder="Select Reference" />
+            <SelectValue placeholder={t("selectReference")} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="none">Select Reference</SelectItem>
-            <SelectItem value="name">Name</SelectItem>
-            <SelectItem value="phone">Phone</SelectItem>
-            <SelectItem value="email">Email</SelectItem>
+            <SelectItem value="none">{t("selectReference")}</SelectItem>
+            <SelectItem value="name">{t("name")}</SelectItem>
+            <SelectItem value="phone">{t("phone")}</SelectItem>
+            <SelectItem value="email">{t("email")}</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -52,7 +54,7 @@ const CustomFieldsStep = ({ fields, onChange, reference, onReferenceChange }: Cu
       {/* Add Field button */}
       <Button variant="outline" onClick={addField} className="border-primary text-primary hover:bg-primary/5">
         <Plus className="mr-2 h-4 w-4" />
-        Add Field
+        {t("addField")}
       </Button>
 
       {/* Field list */}
@@ -60,7 +62,7 @@ const CustomFieldsStep = ({ fields, onChange, reference, onReferenceChange }: Cu
         <div key={field.id} className="rounded-lg border border-border bg-card p-4 space-y-3">
           <div className="flex items-start justify-between">
             <p className="text-sm text-foreground">
-              Step [{index + 1} of {fields.length}] Please enter{" "}
+              {t("stepLabel", { current: index + 1, total: fields.length }).replace("...", "")}{" "}
               <span className="font-semibold">{field.label || "..."}</span>
             </p>
             <Button
@@ -70,7 +72,7 @@ const CustomFieldsStep = ({ fields, onChange, reference, onReferenceChange }: Cu
               onClick={() => removeField(field.id)}
             >
               <Trash2 className="mr-1.5 h-4 w-4" />
-              Remove
+              {t("remove")}
             </Button>
           </div>
 
@@ -78,13 +80,13 @@ const CustomFieldsStep = ({ fields, onChange, reference, onReferenceChange }: Cu
             <Input
               value={field.label}
               onChange={(e) => updateLabel(field.id, e.target.value)}
-              placeholder="Field name"
+              placeholder={t("fieldName")}
               className="flex-1"
               maxLength={100}
             />
             <Button className="shrink-0">
               <List className="mr-2 h-4 w-4" />
-              Set Reply Button
+              {t("setReplyButton")}
             </Button>
           </div>
         </div>

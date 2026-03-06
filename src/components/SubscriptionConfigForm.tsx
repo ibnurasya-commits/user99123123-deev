@@ -2,6 +2,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Plus, Edit, Trash2 } from "lucide-react";
 import { SubscriptionProduct } from "@/types/subscription";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 interface SubscriptionConfigFormProps {
   products: SubscriptionProduct[];
@@ -10,37 +11,38 @@ interface SubscriptionConfigFormProps {
   onEditProduct: (product: SubscriptionProduct) => void;
 }
 
-const billingLabel = (interval: string) => {
-  switch (interval) {
-    case "monthly": return "/ month";
-    case "yearly": return "/ year";
-    case "6months": return "/ 6 months";
-    default: return "";
-  }
-};
-
 const SubscriptionConfigForm = ({
   products,
   onOpenModal,
   onDeleteProduct,
   onEditProduct,
 }: SubscriptionConfigFormProps) => {
+  const { t } = useLanguage();
+
+  const billingLabel = (interval: string) => {
+    switch (interval) {
+      case "monthly": return `/ ${t("monthly").toLowerCase()}`;
+      case "yearly": return `/ ${t("yearly").toLowerCase()}`;
+      case "6months": return `/ ${t("every6Months").toLowerCase()}`;
+      default: return "";
+    }
+  };
+
   return (
     <div className="space-y-6">
-      {/* Subscription Products */}
       <div className="rounded-lg border border-border bg-card p-4">
-        <Label className="text-sm font-semibold text-foreground">Subscription Product</Label>
+        <Label className="text-sm font-semibold text-foreground">{t("subscriptionProduct")}</Label>
 
         {products.length === 0 ? (
           <div className="mt-3 space-y-3">
             <div className="flex items-center gap-2 rounded-md border border-dashed border-border bg-accent/50 px-4 py-6 text-center">
               <div className="w-full text-sm text-muted-foreground">
-                No subscription product created yet
+                {t("noSubscriptionProduct")}
               </div>
             </div>
             <Button onClick={onOpenModal} className="w-full">
               <Plus className="mr-2 h-4 w-4" />
-              Set Subscription Product
+              {t("setSubscriptionProduct")}
             </Button>
           </div>
         ) : (
@@ -78,13 +80,11 @@ const SubscriptionConfigForm = ({
             ))}
             <Button variant="outline" onClick={onOpenModal} className="mt-2 w-full">
               <Plus className="mr-2 h-4 w-4" />
-              Add Another Product
+              {t("addAnotherProduct")}
             </Button>
           </div>
         )}
       </div>
-
-
     </div>
   );
 };

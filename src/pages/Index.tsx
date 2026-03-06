@@ -8,12 +8,15 @@ import EventConfigForm, { EventConfigState } from "@/components/EventConfigForm"
 import CustomFieldsStep, { CustomField } from "@/components/CustomFieldsStep";
 import SummaryPanel from "@/components/SummaryPanel";
 import SubscriptionProductModal from "@/components/SubscriptionProductModal";
+import LanguageToggle from "@/components/LanguageToggle";
 import { SubscriptionProduct } from "@/types/subscription";
 import { toast } from "@/hooks/use-toast";
+import { useLanguage } from "@/i18n/LanguageContext";
 import { ArrowLeft } from "lucide-react";
 
 type WizardPhase = "type-select" | "step1" | "step2" | "step3";
 const Index = () => {
+  const { t } = useLanguage();
   const [phase, setPhase] = useState<WizardPhase>("type-select");
   const [orderType, setOrderType] = useState<OrderType | null>(null);
 
@@ -93,8 +96,10 @@ const Index = () => {
   const handleCreate = () => {
     if (!canCreate) return;
     toast({
-      title: isSubscription ? "Subscription Created" : "Order Created",
-      description: `"${eventName}" has been created${isSubscription ? ` with ${products.length} plan(s)` : ""}.`,
+      title: isSubscription ? t("subscriptionCreated") : t("orderCreated"),
+      description: isSubscription
+        ? t("createdWithPlans", { name: eventName, count: products.length })
+        : t("createdMessage", { name: eventName }),
     });
   };
 
@@ -105,14 +110,19 @@ const Index = () => {
       {/* Header */}
       <div className="border-b border-border bg-card">
         <div className="mx-auto max-w-6xl px-6 py-5">
-          <h1 className="text-xl font-bold text-foreground">
-            {phase === "type-select" ? "Accept Order" : isSubscription ? "Create Subscription" : "Create Order"}
-          </h1>
-          {phase === "type-select" && (
-            <p className="mt-1 text-sm text-muted-foreground">
-              Allow merchants to create an order flow that customers can complete directly from WhatsApp, including product selection, customer data collection, and payment.
-            </p>
-          )}
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-xl font-bold text-foreground">
+                {phase === "type-select" ? t("acceptOrder") : isSubscription ? t("createSubscription") : t("createOrder")}
+              </h1>
+              {phase === "type-select" && (
+                <p className="mt-1 text-sm text-muted-foreground">
+                  {t("headerDescription")}
+                </p>
+              )}
+            </div>
+            <LanguageToggle />
+          </div>
         </div>
       </div>
 
@@ -123,7 +133,7 @@ const Index = () => {
             <OrderTypeSelection selected={orderType} onSelect={setOrderType} />
             <div className="mt-6 flex justify-end">
               <Button onClick={handleContinueFromType} disabled={!orderType}>
-                Continue
+                {t("continue")}
               </Button>
             </div>
           </div>
@@ -138,7 +148,7 @@ const Index = () => {
 
               {phase === "step1" && (
                 <div className="rounded-lg border border-border bg-card p-6">
-                  <h2 className="mb-5 text-base font-semibold text-foreground">Event Information</h2>
+                  <h2 className="mb-5 text-base font-semibold text-foreground">{t("eventInformation")}</h2>
                   <EventInfoForm
                     eventName={eventName}
                     setEventName={setEventName}
@@ -158,23 +168,22 @@ const Index = () => {
                       className="text-muted-foreground"
                     >
                       <ArrowLeft className="mr-2 h-4 w-4" />
-                      Back
+                      {t("back")}
                     </Button>
                     <Button onClick={handleContinueFromStep1} disabled={!step1Valid}>
-                      Continue
+                      {t("continue")}
                     </Button>
                   </div>
                 </div>
               )}
 
-              {/* Accept Order - Step 2: Event Configuration */}
               {phase === "step2" && isAcceptOrder && (
                 <div className="rounded-lg border border-border bg-card p-6">
-                  <h2 className="mb-5 text-base font-semibold text-foreground">Event Configuration</h2>
+                  <h2 className="mb-5 text-base font-semibold text-foreground">{t("eventConfiguration")}</h2>
                   <EventConfigForm
                     config={eventConfig}
                     onChange={setEventConfig}
-                    onSetOption={() => {/* TODO: open set option modal */}}
+                    onSetOption={() => {}}
                   />
                   <div className="mt-6 flex items-center justify-between">
                     <Button
@@ -183,10 +192,10 @@ const Index = () => {
                       className="text-muted-foreground"
                     >
                       <ArrowLeft className="mr-2 h-4 w-4" />
-                      Back
+                      {t("back")}
                     </Button>
                     <Button onClick={handleContinueFromStep2}>
-                      Continue
+                      {t("continue")}
                     </Button>
                   </div>
                 </div>
@@ -194,7 +203,7 @@ const Index = () => {
 
               {phase === "step2" && isSubscription && (
                 <div className="rounded-lg border border-border bg-card p-6">
-                  <h2 className="mb-5 text-base font-semibold text-foreground">Subscription Configuration</h2>
+                  <h2 className="mb-5 text-base font-semibold text-foreground">{t("subscriptionConfiguration")}</h2>
                   <SubscriptionConfigForm
                     products={products}
                     onOpenModal={() => {
@@ -211,19 +220,18 @@ const Index = () => {
                       className="text-muted-foreground"
                     >
                       <ArrowLeft className="mr-2 h-4 w-4" />
-                      Back
+                      {t("back")}
                     </Button>
                     <Button onClick={handleCreate} disabled={!canCreate}>
-                      Create Subscription
+                      {t("createSubscriptionBtn")}
                     </Button>
                   </div>
                 </div>
               )}
 
-              {/* Accept Order - Step 3: Custom Fields */}
               {phase === "step3" && isAcceptOrder && (
                 <div className="rounded-lg border border-border bg-card p-6">
-                  <h2 className="mb-5 text-base font-semibold text-foreground">Custom Field Data</h2>
+                  <h2 className="mb-5 text-base font-semibold text-foreground">{t("customFieldData")}</h2>
                   <CustomFieldsStep
                     fields={customFields}
                     onChange={setCustomFields}
@@ -237,10 +245,10 @@ const Index = () => {
                       className="text-muted-foreground"
                     >
                       <ArrowLeft className="mr-2 h-4 w-4" />
-                      Back
+                      {t("back")}
                     </Button>
                     <Button onClick={handleCreate} disabled={!canCreate}>
-                      Create Event
+                      {t("createEvent")}
                     </Button>
                   </div>
                 </div>
